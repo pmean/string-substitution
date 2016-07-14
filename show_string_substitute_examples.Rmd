@@ -1,0 +1,37 @@
+---
+title: "String substitution"
+author: "Steve Simon"
+date: "Wednesday, July 13, 2016"
+output: html_document
+---
+
+here are a few simple examples of string substitution.
+
+The sub function will look for a pattern, insert a replacement if it is found
+for any string in a vector x.
+
+```{r simple_example_with_sub}
+example_strings <- c("Steve", "Simon", "Thinker")
+sub(pattern="e", replacement="3", x=example_strings)
+```
+
+Notice that the first "e" in the string "Steve" was changed to a "3" as was the "e"
+in "Thinker". There was no match for "e" in "Simon", so it is left unchanged.
+
+If you wanted to change more than one "e", you should use the gsub function.
+
+```{r simple_example_with_gsub}
+gsub(pattern="e", replacement="3", x=example_strings)
+```
+
+By default, the sub and gsub functions use regular expressions. Regular 
+expressions are very powerful, but they require special treatment for
+particular symbols such as the period and the asterisk. So searching,
+for example, for the string "0.2" is not that easy.
+
+If you are just starting out with string substitutions, you may want to avoid
+regular expressions until you get more comfortable with the whole process.
+
+```{r turninging_off_regular_expressions}
+example_strings <- c("0.11", "0.22", "0.33")
+sub(pattern="0.2", replacement=".2", x=example_strings, fixed=TRUE)
