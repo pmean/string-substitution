@@ -11,8 +11,8 @@ The sub function will look for a pattern, insert a replacement if it is found
 for any string in a vector x.
 
 ```{r simple_example_with_sub}
-example_strings <- c("Steve", "Simon", "Thinker")
-sub(pattern="e", replacement="3", x=example_strings)
+example1 <- c("Steve", "Simon", "Thinker")
+sub(pattern="e", replacement="3", x=example1)
 ```
 
 Notice that the first "e" in the string "Steve" was changed to a "3" as was the "e"
@@ -21,17 +21,31 @@ in "Thinker". There was no match for "e" in "Simon", so it is left unchanged.
 If you wanted to change more than one "e", you should use the gsub function.
 
 ```{r simple_example_with_gsub}
-gsub(pattern="e", replacement="3", x=example_strings)
+gsub(pattern="e", replacement="3", x=example1)
+```
+
+If you want to make a substitution of either a lower case or an upper case letter,
+use the ignore.case=TRUE option.
+
+```{r ignoring_case}
+sub(pattern="s", replacement="3", x=example1, ignore.case=TRUE)
 ```
 
 By default, the sub and gsub functions use regular expressions. Regular 
 expressions are very powerful, but they require special treatment for
 particular symbols such as the period and the asterisk. So searching,
-for example, for the string "0.2" is not that easy.
+for example, for the string like "-0.2" has the potential for trouble.
 
 If you are just starting out with string substitutions, you may want to avoid
 regular expressions until you get more comfortable with the whole process.
+Just use the option fixed=TRUE to disable regular expressions.
 
 ```{r turninging_off_regular_expressions}
-example_strings <- c("0.11", "0.22", "0.33")
-sub(pattern="0.2", replacement=".2", x=example_strings, fixed=TRUE)
+example2 <- c("-0.11", "-0.22", "-0.33")
+sub(pattern=".", replacement=",", x=example2, fixed=TRUE)
+```
+
+It turns out that this example would have worked just fine without turning off
+regular expressions, but you should get in the habit of doing this anytime
+you are substituting anything other than a very simple string of just letters.
+

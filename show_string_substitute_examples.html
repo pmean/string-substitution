@@ -69,18 +69,22 @@ img {
 
 <p>here are a few simple examples of string substitution.</p>
 <p>The sub function will look for a pattern, insert a replacement if it is found for any string in a vector x.</p>
-<pre class="r"><code>example_strings &lt;- c(&quot;Steve&quot;, &quot;Simon&quot;, &quot;Thinker&quot;)
-sub(pattern=&quot;e&quot;, replacement=&quot;3&quot;, x=example_strings)</code></pre>
+<pre class="r"><code>example1 &lt;- c(&quot;Steve&quot;, &quot;Simon&quot;, &quot;Thinker&quot;)
+sub(pattern=&quot;e&quot;, replacement=&quot;3&quot;, x=example1)</code></pre>
 <pre><code>## [1] &quot;St3ve&quot;   &quot;Simon&quot;   &quot;Think3r&quot;</code></pre>
 <p>Notice that the first “e” in the string “Steve” was changed to a “3” as was the “e” in “Thinker”. There was no match for “e” in “Simon”, so it is left unchanged.</p>
 <p>If you wanted to change more than one “e”, you should use the gsub function.</p>
-<pre class="r"><code>gsub(pattern=&quot;e&quot;, replacement=&quot;3&quot;, x=example_strings)</code></pre>
+<pre class="r"><code>gsub(pattern=&quot;e&quot;, replacement=&quot;3&quot;, x=example1)</code></pre>
 <pre><code>## [1] &quot;St3v3&quot;   &quot;Simon&quot;   &quot;Think3r&quot;</code></pre>
-<p>By default, the sub and gsub functions use regular expressions. Regular expressions are very powerful, but they require special treatment for particular symbols such as the period and the asterisk. So searching, for example, for the string “0.2” is not that easy.</p>
-<p>If you are just starting out with string substitutions, you may want to avoid regular expressions until you get more comfortable with the whole process.</p>
-<pre class="r"><code>example_strings &lt;- c(&quot;0.11&quot;, &quot;0.22&quot;, &quot;0.33&quot;)
-sub(pattern=&quot;0.&quot;, replacement=&quot;.&quot;, x=example_strings, fixed=TRUE )</code></pre>
-<pre><code>## [1] &quot;.11&quot; &quot;.22&quot; &quot;.33&quot;</code></pre>
+<p>If you want to make a substitution of either a lower case or an upper case letter, use the ignore.case=TRUE option.</p>
+<pre class="r"><code>sub(pattern=&quot;s&quot;, replacement=&quot;3&quot;, x=example1, ignore.case=TRUE)</code></pre>
+<pre><code>## [1] &quot;3teve&quot;   &quot;3imon&quot;   &quot;Thinker&quot;</code></pre>
+<p>By default, the sub and gsub functions use regular expressions. Regular expressions are very powerful, but they require special treatment for particular symbols such as the period and the asterisk. So searching, for example, for the string like “-0.2” has the potential for trouble.</p>
+<p>If you are just starting out with string substitutions, you may want to avoid regular expressions until you get more comfortable with the whole process. Just use the option fixed=TRUE to disable regular expressions.</p>
+<pre class="r"><code>example2 &lt;- c(&quot;-0.11&quot;, &quot;-0.22&quot;, &quot;-0.33&quot;)
+sub(pattern=&quot;.&quot;, replacement=&quot;,&quot;, x=example2, fixed=TRUE)</code></pre>
+<pre><code>## [1] &quot;-0,11&quot; &quot;-0,22&quot; &quot;-0,33&quot;</code></pre>
+<p>It turns out that this example would have worked just fine without turning off regular expressions, but you should get in the habit of doing this anytime you are substituting anything other than a very simple string of just letters.</p>
 
 
 </div>
