@@ -41,11 +41,19 @@ regular expressions until you get more comfortable with the whole process.
 Just use the option fixed=TRUE to disable regular expressions.
 
 ```{r turninging_off_regular_expressions}
-example2 <- c("-0.11", "-0.22", "-0.33")
+example2 <- c("0.11", "0.20", "0.29")
 sub(pattern=".", replacement=",", x=example2, fixed=TRUE)
 ```
 
-It turns out that this example would have worked just fine without turning off
-regular expressions, but you should get in the habit of doing this anytime
-you are substituting anything other than a very simple string of just letters.
+Try this function without fixed=TRUE and see what happens.
 
+```{r what_if}
+sub(pattern=".", replacement=",", x=example2)
+```
+
+The alternative, if you want to stay with regular expressions, is to
+place a double backslash in front of most special characters.
+
+```{r double_backslash}
+sub(pattern="\\.", replacement=",", x=example2)
+```
