@@ -5,7 +5,7 @@ date: "Wednesday, July 13, 2016"
 output: html_document
 ---
 
-here are a few simple examples of string substitution.
+Here are a few simple examples of string substitution.
 
 The sub function will look for a pattern, insert a replacement if it is found
 for any string in a vector x.
