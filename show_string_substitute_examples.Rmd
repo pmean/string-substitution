@@ -44,7 +44,7 @@ sub(pattern="s", replacement="3", x=example1, ignore.case=TRUE)
 By default, the sub and gsub functions use regular expressions. Regular 
 expressions are very powerful, but they require special treatment for
 particular symbols such as the period, the dash, and the asterisk. So searching,
-for example, for the string like "-0.2" has the potential for trouble.
+for example, for a string like "-0.2" has the potential for trouble.
 
 If you are just starting out with string substitutions, you may want to avoid
 regular expressions until you get more comfortable with the whole process.
