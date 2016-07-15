@@ -11,18 +11,28 @@ The sub function will look for a pattern, insert a replacement if it is found
 for any string in a vector x.
 
 ```{r simple_example_with_sub}
-example1 <- c("Steve", "Simon", "Thinker")
+example1 <- c("Steve", "Simon", "Professor", "Mean")
 sub(pattern="e", replacement="3", x=example1)
 ```
 
 Notice that the first "e" in the string "Steve" was changed to a "3" as was the "e"
-in "Thinker". There was no match for "e" in "Simon", so it is left unchanged.
+in "Professor" and "Mean". There was no match for "e" in "Simon", so it is left unchanged.
 
-If you wanted to change more than one "e", you should use the gsub function.
+If you wanted to change more than one "e" in a string, you should use the gsub function.
 
 ```{r simple_example_with_gsub}
 gsub(pattern="e", replacement="3", x=example1)
 ```
+
+You can find a pattern of more than a single character and replace it with
+something shorter or longer.
+
+```{r replace_multiple_characters}
+sub(pattern="eve", replacement="", x=example1)
+```
+
+In the above exaple, the characters "eve' were replaced with nothing
+which is effectively the same as removing them.
 
 If you want to make a substitution of either a lower case or an upper case letter,
 use the ignore.case=TRUE option.
@@ -33,7 +43,7 @@ sub(pattern="s", replacement="3", x=example1, ignore.case=TRUE)
 
 By default, the sub and gsub functions use regular expressions. Regular 
 expressions are very powerful, but they require special treatment for
-particular symbols such as the period and the asterisk. So searching,
+particular symbols such as the period, the dash, and the asterisk. So searching,
 for example, for the string like "-0.2" has the potential for trouble.
 
 If you are just starting out with string substitutions, you may want to avoid
@@ -70,5 +80,66 @@ sub(pattern="0$", replacement="X", x=example2)
 You can use square brackets to match more than one thing.
 
 ```{r square_brackets}
-gsub(pattern="[012]", replacement="X", x=example2)
+gsub(pattern="[01]", replacement="X", x=example2)
 ```
+
+If you tried pattern="01" it would not replace anything because it would look
+for a 0 followed directly by a 1.
+
+The caret (^) inside square brackets will invert the selection.
+
+```{r inverted_selection}
+gsub(pattern="[^01]", replacement="X", x=example2)
+```
+
+In this example, anything EXCEPT a 0 or 1 is replaced.
+
+The plus symbol allows you to match more than one time.
+
+```{r match_multiples}
+example3 <- c("bookkeeper", "width eee")
+gsub(pattern="e+", replacement="X", x=example3)
+```
+
+Notice that the double e in "bookeeeper"" and the triple e in "width eee" were
+replaced by a single X. Regular expressions are greedy in that if you can find a match of length 1,
+a match of length 2, and a match of length 3, regular expressions will preferentially choose the longest match.
+This can sometimes cause some surprising results when you are using the dot (which represents any single
+character) or ranges.
+
+Here's an advanced example. Look for a left parentheses. Since this is a special symbol you have
+to use a double backslash in front of it. Then look for one or more characters of any type, which
+is the dot plus and then match up a closing parenthesis.
+
+```{r removing_brackets}
+example4 <- c("Regular experssions are (sometimes) tricky.", "just watch (carefully) for (special) cases.")
+sub(pattern="\\(.+\\)", replacement="X", x=example4)
+```
+Here you can see the issue with greedy matching. The regular expression found two possible matches:
+"(carefully)" and "(carefully) for (special)" that worked. So because regular expressions are 
+greedy, it took the second match.
+
+```{r removing_brackets_part_2}
+example4 <- c("Regular experssions are (sometimes) tricky.", "just watch (carefully) for (special) cases.")
+sub(pattern="\\([^)]+\\)", replacement="X", x=example4)
+```
+
+Let's take this apart carefully. What you are trying to match is
+
+\\( a left perenthesis
+
+[^)]+ one or more characters that are NOT a right parenthesis
+
+\\) a right parenthesis.
+
+Notice that we did not need a double backslash in front of the first right parenthesis
+in this regular expression but we did need it in front of the second right parenthesis.
+What counts as a special character in regular expressions is different when you are
+inside square brackets than when you are outside square brackets. Did I say that
+regular expressions are tricky?
+
+You can study regular expressions for years and still not understand all the subtleties.
+But once you are comfortable with string substitution in general, I certainly would
+encourage you to experiement with simple regular expressions. In particular, I have
+found the ability to match only at the beginning (^) or only at the end ($)
+of a string to be very useful.

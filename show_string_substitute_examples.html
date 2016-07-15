@@ -69,17 +69,21 @@ img {
 
 <p>here are a few simple examples of string substitution.</p>
 <p>The sub function will look for a pattern, insert a replacement if it is found for any string in a vector x.</p>
-<pre class="r"><code>example1 &lt;- c(&quot;Steve&quot;, &quot;Simon&quot;, &quot;Thinker&quot;)
+<pre class="r"><code>example1 &lt;- c(&quot;Steve&quot;, &quot;Simon&quot;, &quot;Professor&quot;, &quot;Mean&quot;)
 sub(pattern=&quot;e&quot;, replacement=&quot;3&quot;, x=example1)</code></pre>
-<pre><code>## [1] &quot;St3ve&quot;   &quot;Simon&quot;   &quot;Think3r&quot;</code></pre>
-<p>Notice that the first “e” in the string “Steve” was changed to a “3” as was the “e” in “Thinker”. There was no match for “e” in “Simon”, so it is left unchanged.</p>
-<p>If you wanted to change more than one “e”, you should use the gsub function.</p>
+<pre><code>## [1] &quot;St3ve&quot;     &quot;Simon&quot;     &quot;Prof3ssor&quot; &quot;M3an&quot;</code></pre>
+<p>Notice that the first “e” in the string “Steve” was changed to a “3” as was the “e” in “Professor” and “Mean”. There was no match for “e” in “Simon”, so it is left unchanged.</p>
+<p>If you wanted to change more than one “e” in a string, you should use the gsub function.</p>
 <pre class="r"><code>gsub(pattern=&quot;e&quot;, replacement=&quot;3&quot;, x=example1)</code></pre>
-<pre><code>## [1] &quot;St3v3&quot;   &quot;Simon&quot;   &quot;Think3r&quot;</code></pre>
+<pre><code>## [1] &quot;St3v3&quot;     &quot;Simon&quot;     &quot;Prof3ssor&quot; &quot;M3an&quot;</code></pre>
+<p>You can find a pattern of more than a single character and replace it with something shorter or longer.</p>
+<pre class="r"><code>sub(pattern=&quot;eve&quot;, replacement=&quot;&quot;, x=example1)</code></pre>
+<pre><code>## [1] &quot;St&quot;        &quot;Simon&quot;     &quot;Professor&quot; &quot;Mean&quot;</code></pre>
+<p>In the above exaple, the characters “eve’ were replaced with nothing which is effectively the same as removing them.</p>
 <p>If you want to make a substitution of either a lower case or an upper case letter, use the ignore.case=TRUE option.</p>
 <pre class="r"><code>sub(pattern=&quot;s&quot;, replacement=&quot;3&quot;, x=example1, ignore.case=TRUE)</code></pre>
-<pre><code>## [1] &quot;3teve&quot;   &quot;3imon&quot;   &quot;Thinker&quot;</code></pre>
-<p>By default, the sub and gsub functions use regular expressions. Regular expressions are very powerful, but they require special treatment for particular symbols such as the period and the asterisk. So searching, for example, for the string like “-0.2” has the potential for trouble.</p>
+<pre><code>## [1] &quot;3teve&quot;     &quot;3imon&quot;     &quot;Profe3sor&quot; &quot;Mean&quot;</code></pre>
+<p>By default, the sub and gsub functions use regular expressions. Regular expressions are very powerful, but they require special treatment for particular symbols such as the period, the dash, and the asterisk. So searching, for example, for the string like “-0.2” has the potential for trouble.</p>
 <p>If you are just starting out with string substitutions, you may want to avoid regular expressions until you get more comfortable with the whole process. Just use the option fixed=TRUE to disable regular expressions.</p>
 <pre class="r"><code>example2 &lt;- c(&quot;0.11&quot;, &quot;0.20&quot;, &quot;0.29&quot;)
 gsub(pattern=&quot;.&quot;, replacement=&quot;,&quot;, x=example2, fixed=TRUE)</code></pre>
@@ -96,8 +100,32 @@ gsub(pattern=&quot;.&quot;, replacement=&quot;,&quot;, x=example2, fixed=TRUE)</
 <pre class="r"><code>sub(pattern=&quot;0$&quot;, replacement=&quot;X&quot;, x=example2)</code></pre>
 <pre><code>## [1] &quot;0.11&quot; &quot;0.2X&quot; &quot;0.29&quot;</code></pre>
 <p>You can use square brackets to match more than one thing.</p>
-<pre class="r"><code>gsub(pattern=&quot;[012]&quot;, replacement=&quot;X&quot;, x=example2)</code></pre>
-<pre><code>## [1] &quot;X.XX&quot; &quot;X.XX&quot; &quot;X.X9&quot;</code></pre>
+<pre class="r"><code>gsub(pattern=&quot;[01]&quot;, replacement=&quot;X&quot;, x=example2)</code></pre>
+<pre><code>## [1] &quot;X.XX&quot; &quot;X.2X&quot; &quot;X.29&quot;</code></pre>
+<p>If you tried pattern=“01” it would not replace anything because it would look for a 0 followed directly by a 1.</p>
+<p>The caret (^) inside square brackets will invert the selection.</p>
+<pre class="r"><code>gsub(pattern=&quot;[^01]&quot;, replacement=&quot;X&quot;, x=example2)</code></pre>
+<pre><code>## [1] &quot;0X11&quot; &quot;0XX0&quot; &quot;0XXX&quot;</code></pre>
+<p>In this example, anything EXCEPT a 0 or 1 is replaced.</p>
+<p>The plus symbol allows you to match more than one time.</p>
+<pre class="r"><code>example3 &lt;- c(&quot;bookkeeper&quot;, &quot;width eee&quot;)
+gsub(pattern=&quot;e+&quot;, replacement=&quot;X&quot;, x=example3)</code></pre>
+<pre><code>## [1] &quot;bookkXpXr&quot; &quot;width X&quot;</code></pre>
+<p>Notice that the double e in “bookeeeper”&quot; and the triple e in “width eee” were replaced by a single X. Regular expressions are greedy in that if you can find a match of length 1, a match of length 2, and a match of length 3, regular expressions will preferentially choose the longest match. This can sometimes cause some surprising results when you are using the dot (which represents any single character) or ranges.</p>
+<p>Here’s an advanced example. Look for a left parentheses. Since this is a special symbol you have to use a double backslash in front of it. Then look for one or more characters of any type, which is the dot plus and then match up a closing parenthesis.</p>
+<pre class="r"><code>example4 &lt;- c(&quot;Regular experssions are (sometimes) tricky.&quot;, &quot;just watch (carefully) for (special) cases.&quot;)
+sub(pattern=&quot;\\(.+\\)&quot;, replacement=&quot;X&quot;, x=example4)</code></pre>
+<pre><code>## [1] &quot;Regular experssions are X tricky.&quot; &quot;just watch X cases.&quot;</code></pre>
+<p>Here you can see the issue with greedy matching. The regular expression found two possible matches: “(carefully)” and “(carefully) for (special)” that worked. So because regular expressions are greedy, it took the second match.</p>
+<pre class="r"><code>example4 &lt;- c(&quot;Regular experssions are (sometimes) tricky.&quot;, &quot;just watch (carefully) for (special) cases.&quot;)
+sub(pattern=&quot;\\([^)]+\\)&quot;, replacement=&quot;X&quot;, x=example4)</code></pre>
+<pre><code>## [1] &quot;Regular experssions are X tricky.&quot; &quot;just watch X for (special) cases.&quot;</code></pre>
+<p>Let’s take this apart carefully. What you are trying to match is</p>
+<p>\( a left perenthesis</p>
+<p>[^)]+ one or more characters that are NOT a right parenthesis</p>
+<p>\) a right parenthesis.</p>
+<p>Notice that we did not need a double backslash in front of the first right parenthesis in this regular expression but we did need it in front of the second right parenthesis. What counts as a special character in regular expressions is different when you are inside square brackets than when you are outside square brackets. Did I say that regular expressions are tricky?</p>
+<p>You can study regular expressions for years and still not understand all the subtleties. But once you are comfortable with string substitution in general, I certainly would encourage you to experiement with simple regular expressions. In particular, I have found the ability to match only at the beginning (^) or only at the end ($) of a string to be very useful.</p>
 
 
 </div>
